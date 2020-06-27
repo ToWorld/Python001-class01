@@ -33,10 +33,17 @@ class MovieSpider(scrapy.Spider):
         print(response.text)
         items = []
         movies = Selector(response=response).xpath('//div[@class="movie-hover-info"]')
+        counter = 0
         for movie in movies:
             item = SpidersItem() 
-            item['name'] = movie.xpath('./div[1]/span[1]/text()').extract()[0]
-            item['tag'] = movie.xpath('./div[2]/text()').extract()[1].strip('\n').strip(' ').strip('\n')
-            item['time'] = movie.xpath('./div[4]/text()').extract()[1].strip('\n').strip(' ').strip('\n')
-            items.append(item)
+            try:
+                item['name'] = movie.xpath('./div[1]/span[1]/text()').extract()[0]
+                item['tag'] = movie.xpath('./div[2]/text()').extract()[1].strip('\n').strip(' ').strip('\n')
+                item['time'] = movie.xpath('./div[4]/text()').extract()[1].strip('\n').strip(' ').strip('\n')
+                items.append(item)
+            except:
+                continue
+            counter += 1
+            if counter == 9:
+                break
         return items
