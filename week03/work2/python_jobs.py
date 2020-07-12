@@ -39,13 +39,7 @@ def extract_job_info(limit, url, area_name):
 
 	return job_list
 	
-if __name__ == "__main__":
-	run('21aa32b779f94a0abf8c00c6ecb76556', '北京')
-	run('39fc661a87214fceb89d0021916a2cdd', '上海')
-	run('5a6d1b0a7a8a4553bc94149571aa72ce', '广州')
-	run('f89fc9c5fd2342c0a50095b2e9dca976', '深圳')
-
-def run(area_id, area_name)
+def run(area_id, area_name):
 	# 地区, 首页html, 每页多少条数据, 总共抓多少条数据
     # 最小子任务即抓取一个网页
 	page_list = [(15, 'https://www.lagou.com/zhaopin/Python/?filterOption=3&sid=%s' % (area_id, ))]
@@ -62,7 +56,7 @@ def run(area_id, area_name)
 		r.encoding = 'utf-8'
 	'''
 	executor = ThreadPoolExecutor(max_workers=4)
-	all_task = [executor.submit(extract_job_info, page[0],page[1]) for page in page_list]
+	all_task = [executor.submit(extract_job_info, page[0],page[1],area_name) for page in page_list]
 	wait(all_task)
 	'''
 	for task in all_task:
@@ -72,3 +66,10 @@ def run(area_id, area_name)
 	file_name = "job_info.csv"
 	for task in all_task:
 		pd.DataFrame(columns=columns_name, data=task.result()).to_csv(file_name, mode='a', encoding='utf-8', header=False)
+
+
+if __name__ == "__main__":
+	run('21aa32b779f94a0abf8c00c6ecb76556', '北京')
+	run('39fc661a87214fceb89d0021916a2cdd', '上海')
+	run('5a6d1b0a7a8a4553bc94149571aa72ce', '广州')
+	run('f89fc9c5fd2342c0a50095b2e9dca976', '深圳')
