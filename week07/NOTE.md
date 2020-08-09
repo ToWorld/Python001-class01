@@ -1,1 +1,1 @@
-学习笔记
+抽象类与抽象方法，需要继承ABCMeta以及abstractmethod
